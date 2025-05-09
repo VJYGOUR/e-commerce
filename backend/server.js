@@ -4,6 +4,7 @@ const app = express();
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth.route.js"; // import the authRoutes from the auth.route.js file
 import productRoutes from "./routes/product.route.js"; // import the productRoutes from the product.route.js file
+import cartRoutes from "./routes/cart.route.js";
 import { connect } from "mongoose";
 import { connectDB } from "./lib/db.js";
 dotenv.config();
@@ -12,6 +13,7 @@ app.use(express.json()); // this middleware execute for every request and you wr
 app.use(cookieParser()); // this middleware is used to parse the cookies from the request
 app.use("/api/auth", authRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/cart", cartRoutes); // add this line to use the cart routes
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
   connectDB(); // call the connectDB function to connect to the database

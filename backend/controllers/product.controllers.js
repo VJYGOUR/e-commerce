@@ -99,3 +99,28 @@ export const getProductByCategory = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+export const toggleFeaturedProduct = async (req, res) => {
+  try {
+    const product = await Product.findById(req.params.id);
+    if (product) {
+      product.isFeatured = !product.isFeatured;
+      const updatedProduct = await product.save();
+      await updatedFeaturedProductsCache();
+      return res.status(200).json(updatedProduct);
+    } else {
+      return res.status(404).json({ message: "Product not found" });
+    }
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
+};
+export const updatedFeaturedProductsCache = async () => {
+  try {
+    const featuredProducts = await Product.find({ isFeatured: true }).lean();
+    await client.set("featured_products", JSON.stringify(featuredProducts), {
+      EX: 60 * 60 * 24,
+    });
+  } catch (error) {
+    console.error("Error updating featured products cache:", error);
+  }
+};
