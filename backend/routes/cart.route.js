@@ -1,7 +1,9 @@
 import express from "express";
 import {
   addToCart,
+  getCartProducts,
   removeAllFromCart,
+  updateQuantity,
 } from "../controllers/cart.controllers.js";
 import { protectRoute } from "../middleware/auth.middleware";
 const router = express.Router();
