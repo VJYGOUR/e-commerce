@@ -21,4 +21,32 @@ export const useUserStore = create((set, get) => ({
       );
     }
   },
+  login: async (email, password) => {
+    set({ loading: true });
+
+    try {
+      const res = await axios.post("/auth/login", { email, password });
+      set({ user: res.data.user, loading: false });
+    } catch (error) {
+      toast.error(
+        error.response.data.message || "an error occured, try later again"
+      );
+    }
+  },
+  // In useUserStore.js
+  checkAuth: async () => {
+    set({ checkingAuth: true });
+    try {
+      const response = await axios.get("/auth/profile");
+      set({ user: response.data, checkingAuth: false });
+    } catch (error) {
+      if (error.response?.status === 401) {
+        // Clear invalid user data
+        set({ user: null, checkingAuth: false });
+      } else {
+        // Handle other errors
+        set({ checkingAuth: false });
+      }
+    }
+  },
 }));
