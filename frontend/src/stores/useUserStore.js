@@ -34,11 +34,22 @@ export const useUserStore = create((set, get) => ({
     }
   },
   // In useUserStore.js
+  logout: async () => {
+    try {
+      await axios.post("/auth/logout");
+      set({ user: null });
+    } catch (error) {
+      toast.error(
+        error.response?.data?.message || "An error occurred during logout"
+      );
+    }
+  },
   checkAuth: async () => {
     set({ checkingAuth: true });
     try {
       const response = await axios.get("/auth/profile");
       set({ user: response.data, checkingAuth: false });
+      console.log(response.data);
     } catch (error) {
       if (error.response?.status === 401) {
         // Clear invalid user data
