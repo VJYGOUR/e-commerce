@@ -23,9 +23,11 @@ export const useUserStore = create((set, get) => ({
   },
   login: async (email, password) => {
     set({ loading: true });
-
+    console.log("Logging in...");
     try {
+      console.log("Attempting to log in with:", { email, password });
       const res = await axios.post("/auth/login", { email, password });
+
       set({ user: res.data.user, loading: false });
     } catch (error) {
       toast.error(
